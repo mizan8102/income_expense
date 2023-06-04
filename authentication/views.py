@@ -3,9 +3,24 @@ from django.views import View
 import json
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from validate_email import validate_email
+from django.contrib import messages
 
 
 # Create your views here.
+# email validation
+class EmailValidationView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        user_email = data['email']
+        if not validate_email(user_email):
+            return JsonResponse({'email_error': 'email is not valid'}, status=400)
+        if User.objects.filter(email=user_email).exists():
+            return JsonResponse({'email_error': 'email already added'}, status=400)
+        return JsonResponse({'email_valid': True})
+
+
+# user name validation
 class UserNameValidationView(View):
     def post(self, request):
         data = json.loads(request.body)
@@ -19,4 +34,8 @@ class UserNameValidationView(View):
 
 class RegistrationViw(View):
     def get(self, request):
+        return render(request, 'authentication/registration.html')
+
+    def post(self, request):
+        messages.error(request, 'succesfully ')
         return render(request, 'authentication/registration.html')

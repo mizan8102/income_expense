@@ -55,7 +55,7 @@ usernameField.addEventListener("keyup", (e) => {
   feedBackArea.style.display = "none";
 
   if (usernameVal.length > 0) {
-    fetch("/authentication/validate-username", {
+    fetch("/authentication/username-validation", {
       body: JSON.stringify({ username: usernameVal }),
       method: "POST",
     })
